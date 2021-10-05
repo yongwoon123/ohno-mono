@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31702.278
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ohno-mono", "ohno-mono\ohno-mono.vcxproj", "{11602F0D-F09F-4010-8AFF-872B8D7451F4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{11602F0D-F09F-4010-8AFF-872B8D7451F4}.Debug|x64.ActiveCfg = Debug|x64
+		{11602F0D-F09F-4010-8AFF-872B8D7451F4}.Debug|x64.Build.0 = Debug|x64
+		{11602F0D-F09F-4010-8AFF-872B8D7451F4}.Release|x64.ActiveCfg = Release|x64
+		{11602F0D-F09F-4010-8AFF-872B8D7451F4}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8E052940-1F25-4EC1-A98D-D6E8FF855E58}
+	EndGlobalSection
+EndGlobal
