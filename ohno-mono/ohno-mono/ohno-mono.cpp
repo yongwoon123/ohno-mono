@@ -3,10 +3,10 @@
 
 #include "MonoCore/MonoManager.h"
 
-
-std::string GetCsProj()
+const std::string& GetCsProj()
 {
-	return std::string{ (std::filesystem::current_path().parent_path() / "sample-csharp" / "sample.csproj").string() };
+	static const std::string csProj { (std::filesystem::current_path().parent_path() / "sample-csharp" / "sample.csproj").string() };
+	return csProj;
 }
 
 int main()

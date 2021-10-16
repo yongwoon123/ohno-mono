@@ -1,5 +1,4 @@
 #include <iostream>
-#include <filesystem>
 
 #include "MonoCore/MonoManager.h"
 
@@ -75,14 +74,17 @@ namespace ohno
 
 			if (path.extension() == ".dll")
 			{
-				LoadAssembly(path.string());
+				LoadAssembly(path);
 			}
 		}
 	}
 
-	void MonoManager::LoadAssembly(const std::string& assemblyPath)
+	void MonoManager::LoadAssembly(const std::filesystem::path& assemblyPath)
 	{
 		std::cout << "\nLoading Assembly: " << assemblyPath << std::endl;
+
+		const std::string& fileName = assemblyPath.stem().string();
+		mAssemblies[fileName] = std::make_unique<MonoAssembly>(assemblyPath.string());
 	}
 
 	void MonoManager::UnloadAllAssembly()
@@ -99,6 +101,8 @@ namespace ohno
 
 			mScriptDomain = nullptr;
 		}
+
+		mAssemblies.clear();
 	}
 
 	MonoDomain* MonoManager::ScriptDomain() const

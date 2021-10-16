@@ -88,10 +88,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="MonoCore\MonoAssembly.cpp" />
     <ClCompile Include="MonoCore\MonoManager.cpp" />
     <ClCompile Include="ohno-mono.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="MonoCore\MonoAssembly.h" />
     <ClInclude Include="MonoCore\MonoManager.h" />
     <ClInclude Include="MonoCore\MonoPrereq.h" />
   </ItemGroup>

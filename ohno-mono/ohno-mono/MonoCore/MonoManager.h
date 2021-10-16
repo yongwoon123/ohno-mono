@@ -1,9 +1,11 @@
 #pragma once
 
 #include <memory>
+#include <filesystem>
 #include <unordered_map>
 
 #include "MonoCore/MonoPrereq.h"
+#include "MonoCore/MonoAssembly.h"
 
 namespace ohno
 {
@@ -26,7 +28,7 @@ namespace ohno
 		void LoadAssembly();
 
 		//Loads specfic assembly
-		void LoadAssembly(const std::string& assemblyPath);
+		void LoadAssembly(const std::filesystem::path& assemblyPath);
 
 		[[nodiscard]] MonoDomain* ScriptDomain() const;
 
@@ -35,7 +37,7 @@ namespace ohno
 
 	private: //Private data members
 		//Name of file
-		//std::unordered_map<const char*, std::unique_ptr<MonoAssembly>> mAssemblies{};
+		std::unordered_map<std::string, std::unique_ptr<MonoAssembly>> mAssemblies{};
 
 		//Mono Pointers
 		MonoDomain* mRootDomain{};
