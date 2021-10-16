@@ -20,11 +20,16 @@ namespace ohno
 		//Init function called only once
 		void Init();
 
-		void CompileAssembly(const char* csprojPath);
-		void LoadAssembly(const char* dllPath);
+		void CompileAssembly(const std::string& csprojPath);
+
+		//Loads assembly compiled by the compile assembly function
+		void LoadAssembly();
+
+		//Loads specfic assembly
+		void LoadAssembly(const std::string& assemblyPath);
 
 		[[nodiscard]] MonoDomain* ScriptDomain() const;
-		
+
 	private: //Private Functions
 		void UnloadAllAssembly();
 
