@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <cassert>
 
 #include "MonoCore/MonoAssembly.h"
 
@@ -52,60 +53,35 @@ namespace ohno
 			std::cout << "Failed loading assembly" << filePath << std::endl;
 		}
 
-		std::cout << "Assembled " << filePath << std::endl;
-
 		LoadAllClass();
 	}
 
 	MonoAssembly::~MonoAssembly()
 	{
-		//for (auto& p : mClasses)
-		//{
-		//	p.second->Unload();
-		//}
-
-		//mClasses.clear();
-
+		mClasses.clear();
 		mono_image_close(mImage);
-		mIsLoaded = false;
 		mAssembly = nullptr;
-	}
-
-	bool MonoAssembly::GetLoaded()
-	{
-		return mIsLoaded;
 	}
 
 	void MonoAssembly::LoadAllClass()
 	{
-		std::cout << "Load All Class" << std::endl;
-
 		const int numRows = mono_image_get_table_rows(mImage, MONO_TABLE_TYPEDEF);
 
 		for (int i = 1; i < numRows; ++i)
 		{
-			auto* mClass = mono_class_get(mImage, (i + 1) | MONO_TOKEN_TYPE_DEF);
+			std::unique_ptr<MonoClass> classPtr
+				= std::make_unique<MonoClass>(mono_class_get(mImage, (i + 1) | MONO_TOKEN_TYPE_DEF));
 
-			if (mClass == nullptr)
-			{
-				std::cout << "Some class issue" << std::endl;
-				continue;
-			}
-
-			std::cout << mono_class_get_name(mClass) << std::endl;
-
-			//std::unique_ptr<MonoClass> monoClass = std::make_unique<MonoClass>();
-
-			//str name = monoClass->LoadClass(mImage, (i + 1) | MONO_TOKEN_TYPE_DEF);
-
-			//if (monoClass->mIsLoaded == false)
-			//{
-			//	continue;
-			//}
-
-			//mClasses[name] = std::move(monoClass);
+			mClasses[classPtr->GetClassName()] = std::move(classPtr);
 		}
+	}
 
-		mIsLoaded = true;
+	const MonoClass* MonoAssembly::GetClass(const char* monoClassName)
+	{
+		auto it = mClasses.find(monoClassName);
+
+		if (it == mClasses.end()) return nullptr;
+
+		return it->second.get();
 	}
 }

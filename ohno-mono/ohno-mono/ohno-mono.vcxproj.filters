@@ -24,6 +24,18 @@
     <ClCompile Include="MonoCore\MonoAssembly.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MonoCore\MonoClass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MonoCore\MonoMethod.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MonoCore\MonoClassField.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MonoUtil\MonoHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MonoCore\MonoManager.h">
@@ -33,6 +45,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MonoCore\MonoAssembly.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MonoCore\MonoClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MonoCore\MonoMethod.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MonoCore\MonoClassField.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MonoUtil\MonoHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

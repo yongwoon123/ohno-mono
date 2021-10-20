@@ -30,6 +30,9 @@ namespace ohno
 		//Loads specfic assembly
 		void LoadAssembly(const std::filesystem::path& assemblyPath);
 
+		::MonoObject* CreateInstance(const char* monoClassName, void** args = nullptr, size_t num = 0);
+		const MonoClass* GetClass(const char* monoClassName);
+
 		[[nodiscard]] MonoDomain* ScriptDomain() const;
 
 	private: //Private Functions

@@ -68,6 +68,15 @@ namespace ohno
 
 	void MonoManager::LoadAssembly()
 	{
+		if (mScriptDomain == nullptr)
+		{
+			const std::string outputDirStr{ (stdfs::current_path() / outputDir).string() };
+			mScriptDomain = mono_domain_create_appdomain(const_cast<char*>(outputDirStr.c_str()), nullptr);
+			mono_domain_set(mScriptDomain, true);
+
+			//AssertSystem::Assert(mScriptDomain, "Cannot create script app domain.");
+		}
+
 		for (const auto& dir : stdfs::directory_iterator{ GetDllOutputPath() })
 		{
 			const stdfs::path& path = dir.path();
@@ -81,7 +90,7 @@ namespace ohno
 
 	void MonoManager::LoadAssembly(const std::filesystem::path& assemblyPath)
 	{
-		std::cout << "\nLoading Assembly: " << assemblyPath << std::endl;
+		std::cout << assemblyPath.filename().string() << std::endl;
 
 		const std::string& fileName = assemblyPath.stem().string();
 		mAssemblies[fileName] = std::make_unique<MonoAssembly>(assemblyPath.string());
@@ -103,6 +112,41 @@ namespace ohno
 		}
 
 		mAssemblies.clear();
+	}
+
+	::MonoObject* MonoManager::CreateInstance(const char* monoClassName, void** args, size_t num)
+	{
+		const MonoClass* classPtr = GetClass(monoClassName);
+
+		if (classPtr)
+		{
+			auto* obj = mono_object_new(mScriptDomain, classPtr->GetRawClass());
+
+			return classPtr->CreateInstance(
+				obj,
+				args,
+				num
+			);
+		}
+
+		return nullptr;
+	}
+
+	const MonoClass* MonoManager::GetClass(const char* monoClassName)
+	{
+		const MonoClass* ret = nullptr;
+
+		for (const auto& [assemblyName, assembly] : mAssemblies)
+		{
+			ret = assembly->GetClass(monoClassName);
+
+			if (ret)
+			{
+				return ret;
+			}
+		}
+
+		return ret;
 	}
 
 	MonoDomain* MonoManager::ScriptDomain() const

@@ -89,13 +89,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="MonoCore\MonoAssembly.cpp" />
+    <ClCompile Include="MonoCore\MonoClass.cpp" />
+    <ClCompile Include="MonoCore\MonoClassField.cpp" />
     <ClCompile Include="MonoCore\MonoManager.cpp" />
+    <ClCompile Include="MonoCore\MonoMethod.cpp" />
+    <ClCompile Include="MonoUtil\MonoHelper.cpp" />
     <ClCompile Include="ohno-mono.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MonoCore\MonoAssembly.h" />
+    <ClInclude Include="MonoCore\MonoClass.h" />
+    <ClInclude Include="MonoCore\MonoClassField.h" />
     <ClInclude Include="MonoCore\MonoManager.h" />
+    <ClInclude Include="MonoCore\MonoMethod.h" />
     <ClInclude Include="MonoCore\MonoPrereq.h" />
+    <ClInclude Include="MonoUtil\MonoHelper.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
