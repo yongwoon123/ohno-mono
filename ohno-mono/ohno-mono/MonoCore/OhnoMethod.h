@@ -7,18 +7,18 @@
 
 namespace ohno
 {
-	class MonoMethod
+	class OhnoMethod
 	{
 	public:
-		MonoMethod(::MonoMethod* rawMethod);
-		~MonoMethod();
+		OhnoMethod(::MonoMethod* rawMethod);
+		~OhnoMethod();
 
 		::MonoObject* Invoke(::MonoObject* instance, void** params = nullptr) const;
 
 		const char* GetMethodName() const;
 		size_t      GetNumParam() const;
 
-		friend std::ostream& operator<<(std::ostream& cout, const MonoMethod& rhs);
+		friend std::ostream& operator<<(std::ostream& cout, const OhnoMethod& rhs);
 
 	private:
 		::MonoMethod* mMethod{ nullptr };

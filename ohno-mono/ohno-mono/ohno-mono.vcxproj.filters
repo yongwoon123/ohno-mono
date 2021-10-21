@@ -15,22 +15,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ohno-mono.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MonoCore\MonoManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MonoCore\MonoAssembly.cpp">
+    <ClCompile Include="MonoCore\OhnoAssembly.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MonoCore\MonoClass.cpp">
+    <ClCompile Include="MonoCore\OhnoClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MonoCore\MonoMethod.cpp">
+    <ClCompile Include="MonoCore\OhnoMethod.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MonoCore\MonoClassField.cpp">
+    <ClCompile Include="MonoCore\OhnoClassField.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MonoUtil\MonoHelper.cpp">
@@ -44,16 +41,16 @@
     <ClInclude Include="MonoCore\MonoPrereq.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MonoCore\MonoAssembly.h">
+    <ClInclude Include="MonoCore\OhnoAssembly.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MonoCore\MonoClass.h">
+    <ClInclude Include="MonoCore\OhnoClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MonoCore\MonoMethod.h">
+    <ClInclude Include="MonoCore\OhnoMethod.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MonoCore\MonoClassField.h">
+    <ClInclude Include="MonoCore\OhnoClassField.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MonoUtil\MonoHelper.h">

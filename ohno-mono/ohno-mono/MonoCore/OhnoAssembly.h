@@ -3,21 +3,21 @@
 #include <unordered_map>
 
 #include "MonoCore/MonoPrereq.h"
-#include "MonoCore/MonoClass.h"
+#include "MonoCore/OhnoClass.h"
 
 namespace ohno
 {
-	class MonoAssembly
+	class OhnoAssembly
 	{
 	public://Public Functions
 
 		//Constructor
-		MonoAssembly(const std::string& filePath);
+		OhnoAssembly(const std::string& filePath);
 
 		//Destructor
-		~MonoAssembly();
+		~OhnoAssembly();
 
-		const MonoClass* GetClass(const char* monoClassName);
+		const OhnoClass* GetClass(const char* monoClassName);
 
 	private:
 		//Helper to load all classes
@@ -27,6 +27,6 @@ namespace ohno
 		::MonoAssembly* mAssembly{ nullptr };
 		::MonoImage* mImage{ nullptr };
 
-		std::unordered_map<std::string, std::unique_ptr<MonoClass>> mClasses{};
+		std::unordered_map<std::string, std::unique_ptr<OhnoClass>> mClasses{};
 	};
 }

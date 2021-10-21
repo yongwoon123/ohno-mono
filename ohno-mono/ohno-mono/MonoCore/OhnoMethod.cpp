@@ -1,11 +1,11 @@
 #include <iostream>
 
-#include "MonoCore/MonoMethod.h"
+#include "MonoCore/OhnoMethod.h"
 #include "MonoUtil/MonoHelper.h"
 
 namespace ohno
 {
-	MonoMethod::MonoMethod(::MonoMethod* rawMethod)
+	OhnoMethod::OhnoMethod(::MonoMethod* rawMethod)
 		: mMethod{ rawMethod }
 		, mName{ mono_method_get_name(rawMethod) }
 	{
@@ -33,12 +33,12 @@ namespace ohno
 		std::cout << "|------" << *this << std::endl;
 	}
 
-	MonoMethod::~MonoMethod()
+	OhnoMethod::~OhnoMethod()
 	{
 		mParams.clear();
 	}
 
-	::MonoObject* MonoMethod::Invoke(::MonoObject* instance, void** params) const
+	::MonoObject* OhnoMethod::Invoke(::MonoObject* instance, void** params) const
 	{
 		::MonoObject* excep = nullptr;
 		::MonoObject* retVal = mono_runtime_invoke(mMethod, instance, params, &excep);
@@ -47,17 +47,17 @@ namespace ohno
 		return retVal;
 	}
 
-	const char* MonoMethod::GetMethodName() const
+	const char* OhnoMethod::GetMethodName() const
 	{
 		return mName;
 	}
 
-	size_t MonoMethod::GetNumParam() const
+	size_t OhnoMethod::GetNumParam() const
 	{
 		return mNumParam;
 	}
 
-	std::ostream& operator<<(std::ostream& cout, const MonoMethod& rhs)
+	std::ostream& operator<<(std::ostream& cout, const OhnoMethod& rhs)
 	{
 		cout << mono_class_get_name(rhs.mRetType) << " " << rhs.mName << "(" << rhs.mSig << ")";
 		return cout;

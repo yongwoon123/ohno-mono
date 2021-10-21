@@ -93,7 +93,7 @@ namespace ohno
 		std::cout << assemblyPath.filename().string() << std::endl;
 
 		const std::string& fileName = assemblyPath.stem().string();
-		mAssemblies[fileName] = std::make_unique<MonoAssembly>(assemblyPath.string());
+		mAssemblies[fileName] = std::make_unique<OhnoAssembly>(assemblyPath.string());
 	}
 
 	void MonoManager::UnloadAllAssembly()
@@ -116,7 +116,7 @@ namespace ohno
 
 	::MonoObject* MonoManager::CreateInstance(const char* monoClassName, void** args, size_t num)
 	{
-		const MonoClass* classPtr = GetClass(monoClassName);
+		const OhnoClass* classPtr = GetClass(monoClassName);
 
 		if (classPtr)
 		{
@@ -132,9 +132,9 @@ namespace ohno
 		return nullptr;
 	}
 
-	const MonoClass* MonoManager::GetClass(const char* monoClassName)
+	const OhnoClass* MonoManager::GetClass(const char* monoClassName)
 	{
-		const MonoClass* ret = nullptr;
+		const OhnoClass* ret = nullptr;
 
 		for (const auto& [assemblyName, assembly] : mAssemblies)
 		{
@@ -149,7 +149,7 @@ namespace ohno
 		return ret;
 	}
 
-	MonoDomain* MonoManager::ScriptDomain() const
+	::MonoDomain* MonoManager::ScriptDomain() const
 	{
 		return mScriptDomain;
 	}

@@ -2,7 +2,7 @@
 #include <fstream>
 #include <cassert>
 
-#include "MonoCore/MonoAssembly.h"
+#include "MonoCore/OhnoAssembly.h"
 
 namespace ohno
 {
@@ -25,7 +25,7 @@ namespace ohno
 		}
 	};
 
-	MonoAssembly::MonoAssembly(const std::string& filePath)
+	OhnoAssembly::OhnoAssembly(const std::string& filePath)
 	{
 		FileStreams file{ filePath };
 
@@ -56,27 +56,27 @@ namespace ohno
 		LoadAllClass();
 	}
 
-	MonoAssembly::~MonoAssembly()
+	OhnoAssembly::~OhnoAssembly()
 	{
 		mClasses.clear();
 		mono_image_close(mImage);
 		mAssembly = nullptr;
 	}
 
-	void MonoAssembly::LoadAllClass()
+	void OhnoAssembly::LoadAllClass()
 	{
 		const int numRows = mono_image_get_table_rows(mImage, MONO_TABLE_TYPEDEF);
 
 		for (int i = 1; i < numRows; ++i)
 		{
-			std::unique_ptr<MonoClass> classPtr
-				= std::make_unique<MonoClass>(mono_class_get(mImage, (i + 1) | MONO_TOKEN_TYPE_DEF));
+			std::unique_ptr<OhnoClass> classPtr
+				= std::make_unique<OhnoClass>(mono_class_get(mImage, (i + 1) | MONO_TOKEN_TYPE_DEF));
 
 			mClasses[classPtr->GetClassName()] = std::move(classPtr);
 		}
 	}
 
-	const MonoClass* MonoAssembly::GetClass(const char* monoClassName)
+	const OhnoClass* OhnoAssembly::GetClass(const char* monoClassName)
 	{
 		auto it = mClasses.find(monoClassName);
 

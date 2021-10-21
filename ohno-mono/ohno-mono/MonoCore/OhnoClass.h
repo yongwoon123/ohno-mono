@@ -5,16 +5,16 @@
 #include <unordered_map>
 
 #include "MonoCore/MonoPrereq.h"
-#include "MonoCore/MonoMethod.h"
-#include "MonoCore/MonoClassField.h"
+#include "MonoCore/OhnoMethod.h"
+#include "MonoCore/OhnoClassField.h"
 
 namespace ohno
 {
-	class MonoClass
+	class OhnoClass
 	{
 	public:
-		MonoClass(::MonoClass* rawClass);
-		~MonoClass();
+		OhnoClass(::MonoClass* rawClass);
+		~OhnoClass();
 
 		::MonoObject* CreateInstance(::MonoObject* instance = nullptr, void* args[] = nullptr, size_t num = 0) const;
 
@@ -23,8 +23,8 @@ namespace ohno
 								   void** params = nullptr,
 								   size_t numParams = 0) const;
 
-		const MonoClassField* GetField(const char* fieldName) const;
-		const MonoMethod* GetMethod(const char* methodName, size_t numParam = 0) const;
+		const OhnoClassField* GetField(const char* fieldName) const;
+		const OhnoMethod* GetMethod(const char* methodName, size_t numParam = 0) const;
 
 		[[nodiscard]] bool isSubClassOf(::MonoClass* monoClass) const;
 		[[nodiscard]] const char* GetClassName() const;
@@ -38,7 +38,7 @@ namespace ohno
 		::MonoClass* mClass{ nullptr };
 		const char*  mName{ nullptr };
 
-		std::unordered_map<std::string, std::unique_ptr<MonoMethod>>     mMethods{};
-		std::unordered_map<std::string, std::shared_ptr<MonoClassField>> mFields{};
+		std::unordered_map<std::string, std::unique_ptr<OhnoMethod>>     mMethods{};
+		std::unordered_map<std::string, std::shared_ptr<OhnoClassField>> mFields{};
 	};
 }

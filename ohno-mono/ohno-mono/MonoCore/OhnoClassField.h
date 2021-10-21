@@ -2,10 +2,10 @@
 
 namespace ohno
 {
-	class MonoClassField
+	class OhnoClassField
 	{
 	public:
-		MonoClassField(::MonoClassField* monoClassField);
+		OhnoClassField(::MonoClassField* monoClassField);
 
 		void Get(::MonoObject* objInstance, void* outputValue) const;
 		void Set(::MonoObject* objInstance, void* inputValue) const;
@@ -14,7 +14,7 @@ namespace ohno
 		const char* GetClassName() const;
 		const char* GetAccess() const;
 
-		friend std::ostream& operator<<(std::ostream& cout, const MonoClassField& rhs);
+		friend std::ostream& operator<<(std::ostream& cout, const OhnoClassField& rhs);
 
 	private:
 		::MonoClassField* mField{};

@@ -15,8 +15,8 @@
 namespace ohno
 {
 	class MonoManager;
-	class MonoAssembly;
-	class MonoClass;
-	class MonoMethod;
-	class MonoClassField;
+	class OhnoAssembly;
+	class OhnoClass;
+	class OhnoMethod;
+	class OhnoClassField;
 }

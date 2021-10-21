@@ -1,7 +1,7 @@
 #include <iostream>
 #include <filesystem>
 
-#include "MonoCore/MonoManager.h"
+#include <MonoCore/MonoManager.h>
 
 struct Vector3
 {
@@ -23,7 +23,7 @@ int main()
 	mm.LoadAssembly();
 
 	//Get Class
-	const ohno::MonoClass* classPtr = mm.GetClass("A");
+	const ohno::OhnoClass* classPtr = mm.GetClass("A");
 	::MonoObject* objPtr = nullptr;
 
 	{
@@ -40,8 +40,8 @@ int main()
 
 	//Field Example
 	{
-		const ohno::MonoClassField* fieldPtr1 = classPtr->GetField("BaseValueIs20");
-		const ohno::MonoClassField* fieldPtr2 = classPtr->GetField("BaseValueIs10F");
+		const ohno::OhnoClassField* fieldPtr1 = classPtr->GetField("BaseValueIs20");
+		const ohno::OhnoClassField* fieldPtr2 = classPtr->GetField("BaseValueIs10F");
 
 		int input = 5, output = 0;
 		fieldPtr1->Get(objPtr, &output);
@@ -62,8 +62,8 @@ int main()
 
 	//Method Example
 	{
-		const ohno::MonoMethod* methodPtr1 = classPtr->GetMethod("SampleFunctionC");
-		const ohno::MonoMethod* methodPtr2 = classPtr->GetMethod("SampleFunctionD", 1);
+		const ohno::OhnoMethod* methodPtr1 = classPtr->GetMethod("SampleFunctionC");
+		const ohno::OhnoMethod* methodPtr2 = classPtr->GetMethod("SampleFunctionD", 1);
 
 		classPtr->InvokeMethod("SampleFunctionC", objPtr);
 		methodPtr1->Invoke(objPtr);

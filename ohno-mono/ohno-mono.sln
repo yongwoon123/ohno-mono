@@ -7,6 +7,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ohno-mono", "ohno-mono\ohno
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sample", "sample-csharp\sample.csproj", "{12C1F065-5CB6-413C-82C8-B52C06C41175}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "chapter1", "chapter1\chapter1.vcxproj", "{484354B2-CA85-454D-85F1-D9ABAE399946}"
+	ProjectSection(ProjectDependencies) = postProject
+		{11602F0D-F09F-4010-8AFF-872B8D7451F4} = {11602F0D-F09F-4010-8AFF-872B8D7451F4}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -19,6 +24,10 @@ Global
 		{11602F0D-F09F-4010-8AFF-872B8D7451F4}.Release|x64.Build.0 = Release|x64
 		{12C1F065-5CB6-413C-82C8-B52C06C41175}.Debug|x64.ActiveCfg = Debug|x64
 		{12C1F065-5CB6-413C-82C8-B52C06C41175}.Release|x64.ActiveCfg = Release|x64
+		{484354B2-CA85-454D-85F1-D9ABAE399946}.Debug|x64.ActiveCfg = Debug|x64
+		{484354B2-CA85-454D-85F1-D9ABAE399946}.Debug|x64.Build.0 = Debug|x64
+		{484354B2-CA85-454D-85F1-D9ABAE399946}.Release|x64.ActiveCfg = Release|x64
+		{484354B2-CA85-454D-85F1-D9ABAE399946}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

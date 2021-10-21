@@ -5,7 +5,7 @@
 #include <unordered_map>
 
 #include "MonoCore/MonoPrereq.h"
-#include "MonoCore/MonoAssembly.h"
+#include "MonoCore/OhnoAssembly.h"
 
 namespace ohno
 {
@@ -31,19 +31,19 @@ namespace ohno
 		void LoadAssembly(const std::filesystem::path& assemblyPath);
 
 		::MonoObject* CreateInstance(const char* monoClassName, void** args = nullptr, size_t num = 0);
-		const MonoClass* GetClass(const char* monoClassName);
+		const OhnoClass* GetClass(const char* monoClassName);
 
-		[[nodiscard]] MonoDomain* ScriptDomain() const;
+		[[nodiscard]] ::MonoDomain* ScriptDomain() const;
 
 	private: //Private Functions
 		void UnloadAllAssembly();
 
 	private: //Private data members
 		//Name of file
-		std::unordered_map<std::string, std::unique_ptr<MonoAssembly>> mAssemblies{};
+		std::unordered_map<std::string, std::unique_ptr<OhnoAssembly>> mAssemblies{};
 
 		//Mono Pointers
-		MonoDomain* mRootDomain{};
-		MonoDomain* mScriptDomain{};
+		::MonoDomain* mRootDomain{};
+		::MonoDomain* mScriptDomain{};
 	};
 }

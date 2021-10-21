@@ -1,10 +1,10 @@
 #include <iostream>
 
-#include "MonoCore/MonoClassField.h"
+#include "MonoCore/OhnoClassField.h"
 
 namespace ohno
 {
-	MonoClassField::MonoClassField(::MonoClassField* monoClassField)
+	OhnoClassField::OhnoClassField(::MonoClassField* monoClassField)
 		: mField{ monoClassField }
 		, mFieldName{ mono_field_get_name(mField) }
 		, mType{ mono_field_get_type(mField) }
@@ -15,27 +15,27 @@ namespace ohno
 		std::cout << "|------" << *this << std::endl;
 	}
 
-	void MonoClassField::Get(::MonoObject* objInstance, void* outputValue) const
+	void OhnoClassField::Get(::MonoObject* objInstance, void* outputValue) const
 	{
 		mono_field_get_value(objInstance, mField, outputValue);
 	}
 
-	void MonoClassField::Set(::MonoObject* objInstance, void* inputValue) const
+	void OhnoClassField::Set(::MonoObject* objInstance, void* inputValue) const
 	{
 		mono_field_set_value(objInstance, mField, inputValue);
 	}
 
-	const char* MonoClassField::GetFieldName() const
+	const char* OhnoClassField::GetFieldName() const
 	{
 		return mFieldName;
 	}
 
-	const char* MonoClassField::GetClassName() const
+	const char* OhnoClassField::GetClassName() const
 	{
 		return mClassName;
 	}
 
-	const char* MonoClassField::GetAccess() const
+	const char* OhnoClassField::GetAccess() const
 	{
 		switch (mFlags & MONO_FIELD_ATTR_FIELD_ACCESS_MASK)
 		{
@@ -59,7 +59,7 @@ namespace ohno
 		}
 	}
 
-	std::ostream& operator<<(std::ostream& cout, const MonoClassField& rhs)
+	std::ostream& operator<<(std::ostream& cout, const OhnoClassField& rhs)
 	{
 		cout << rhs.GetAccess() << " " << rhs.mClassName << " " << rhs.mFieldName;
 		return cout;

@@ -2,11 +2,11 @@
 #include <cassert>
 
 #include "MonoCore/MonoManager.h"
-#include "MonoCore/MonoClass.h"
+#include "MonoCore/OhnoClass.h"
 
 namespace ohno
 {
-	MonoClass::MonoClass(::MonoClass* rawClass)
+	OhnoClass::OhnoClass(::MonoClass* rawClass)
 		: mClass{ rawClass }
 		, mName{ mono_class_get_name(mClass) }
 	{
@@ -16,13 +16,13 @@ namespace ohno
 		LoadAllFields();
 	}
 
-	MonoClass::~MonoClass()
+	OhnoClass::~OhnoClass()
 	{
 		mMethods.clear();
 		mFields.clear();
 	}
 
-	::MonoObject* MonoClass::CreateInstance(::MonoObject* instance, void* args[], size_t num) const
+	::MonoObject* OhnoClass::CreateInstance(::MonoObject* instance, void* args[], size_t num) const
 	{
 		assert(instance != nullptr);
 
@@ -38,7 +38,7 @@ namespace ohno
 		return instance;
 	}
 
-	bool MonoClass::isSubClassOf(::MonoClass* monoClass) const
+	bool OhnoClass::isSubClassOf(::MonoClass* monoClass) const
 	{
 		if (monoClass == nullptr)
 			return false;
@@ -46,7 +46,7 @@ namespace ohno
 		return mono_class_is_subclass_of(mClass, monoClass, true);
 	}
 
-	::MonoObject* MonoClass::InvokeMethod(const char* name, ::MonoObject* instance, void** params, size_t numParams) const
+	::MonoObject* OhnoClass::InvokeMethod(const char* name, ::MonoObject* instance, void** params, size_t numParams) const
 	{
 		auto iter = mMethods.find(name);
 
@@ -58,7 +58,7 @@ namespace ohno
 		return nullptr;
 	}
 
-	void MonoClass::LoadAllMethods()
+	void OhnoClass::LoadAllMethods()
 	{
 		std::cout << "|----" << "Methods" << std::endl;
 
@@ -67,14 +67,14 @@ namespace ohno
 
 		while (curClassMethod != nullptr)
 		{
-			std::unique_ptr<MonoMethod> methodPtr = std::make_unique<MonoMethod>(curClassMethod);
+			std::unique_ptr<OhnoMethod> methodPtr = std::make_unique<OhnoMethod>(curClassMethod);
 			mMethods[methodPtr->GetMethodName()] = std::move(methodPtr);
 
 			curClassMethod = mono_class_get_methods(mClass, &methodIter);
 		}
 	}
 
-	void MonoClass::LoadAllFields()
+	void OhnoClass::LoadAllFields()
 	{
 		std::cout << "|----" << "Fields" << std::endl;
 
@@ -83,29 +83,29 @@ namespace ohno
 
 		while (curClassField != nullptr)
 		{
-			std::shared_ptr<MonoClassField> field = std::make_shared<MonoClassField>(curClassField);
+			std::shared_ptr<OhnoClassField> field = std::make_shared<OhnoClassField>(curClassField);
 			mFields[field->GetFieldName()] = std::move(field);
 
 			curClassField = mono_class_get_fields(mClass, &fieldIter);
 		}
 	}
 
-	const char* MonoClass::GetClassName() const
+	const char* OhnoClass::GetClassName() const
 	{
 		return mName;
 	}
 
-	::MonoClass* MonoClass::GetRawClass() const
+	::MonoClass* OhnoClass::GetRawClass() const
 	{
 		return mClass;
 	}
 
-	const MonoClassField* MonoClass::GetField(const char* fieldName) const
+	const OhnoClassField* OhnoClass::GetField(const char* fieldName) const
 	{
 		return mFields.find(fieldName)->second.get();
 	}
 
-	const MonoMethod* MonoClass::GetMethod(const char* methodName, size_t numParam) const
+	const OhnoMethod* OhnoClass::GetMethod(const char* methodName, size_t numParam) const
 	{
 		auto it = mMethods.find(methodName);
 
