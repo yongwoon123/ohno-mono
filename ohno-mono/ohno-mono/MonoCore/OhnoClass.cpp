@@ -58,6 +58,12 @@ namespace ohno
 		return nullptr;
 	}
 
+	void OhnoClass::AddInternalCall(const std::string& name, const void* method) const
+	{
+		const std::string fullMethodName = std::string{ mName } + "::" + name;
+		mono_add_internal_call(fullMethodName.c_str(), method);
+	}
+
 	void OhnoClass::LoadAllMethods()
 	{
 		std::cout << "|----" << "Methods" << std::endl;

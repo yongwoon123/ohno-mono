@@ -23,6 +23,8 @@ namespace ohno
 								   void** params = nullptr,
 								   size_t numParams = 0) const;
 
+		void AddInternalCall(const std::string& name, const void* method) const;
+
 		const OhnoClassField* GetField(const char* fieldName) const;
 		const OhnoMethod* GetMethod(const char* methodName, size_t numParam = 0) const;
 

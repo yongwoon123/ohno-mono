@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 class SampleClass
 {
@@ -54,4 +55,13 @@ public class A
 	{
 		Out.Log("This is Sample Function D " + b);
 	}
+
+	public void SampleFunctionE()
+	{
+		Out.Log("This is Sample Function E");
+		Internal_CallCPPFunc();
+	}
+
+	[MethodImpl(MethodImplOptions.InternalCall)]
+	private static extern void Internal_CallCPPFunc();
 }

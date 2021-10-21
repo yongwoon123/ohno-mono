@@ -14,6 +14,11 @@ const std::string& GetCsProj()
 	return csProj;
 }
 
+void CPPFunc()
+{
+	std::cout << "Called the CPPFunc" << std::endl;
+}
+
 int main()
 {
 	ohno::MonoManager mm{};
@@ -36,6 +41,11 @@ int main()
 		int val = 51234;
 		void* args[] = { &val };
 		objPtr = mm.CreateInstance("A", args, 1);
+	}
+	
+	//Internal Call example
+	{
+		classPtr->AddInternalCall("Internal_CallCPPFunc", CPPFunc);
 	}
 
 	//Field Example
@@ -64,6 +74,7 @@ int main()
 	{
 		const ohno::OhnoMethod* methodPtr1 = classPtr->GetMethod("SampleFunctionC");
 		const ohno::OhnoMethod* methodPtr2 = classPtr->GetMethod("SampleFunctionD", 1);
+		const ohno::OhnoMethod* methodPtr3 = classPtr->GetMethod("SampleFunctionE");
 
 		classPtr->InvokeMethod("SampleFunctionC", objPtr);
 		methodPtr1->Invoke(objPtr);
@@ -72,5 +83,8 @@ int main()
 		void* args[] = { &val };
 		classPtr->InvokeMethod("SampleFunctionD", objPtr, args, 1);
 		methodPtr2->Invoke(objPtr, args);
+
+		classPtr->InvokeMethod("SampleFunctionE", objPtr);
+		methodPtr3->Invoke(objPtr);
 	}
 }

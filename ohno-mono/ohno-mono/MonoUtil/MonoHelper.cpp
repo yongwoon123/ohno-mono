@@ -21,14 +21,14 @@ namespace ohno
 			::MonoClass* exceptionClass = mono_object_get_class(exception);
 			::MonoProperty* exceptionMsgProp = mono_class_get_property_from_name(exceptionClass, "Message");
 			::MonoMethod* exceptionMsgGetter = mono_property_get_get_method(exceptionMsgProp);
-			MonoString* exceptionMsg = (MonoString*) mono_runtime_invoke(exceptionMsgGetter,
+			::MonoString* exceptionMsg = (::MonoString*) mono_runtime_invoke(exceptionMsgGetter,
 																		 exception,
 																		 nullptr,
 																		 nullptr);
 
 			::MonoProperty* exceptionStackProp = mono_class_get_property_from_name(exceptionClass, "StackTrace");
 			::MonoMethod* exceptionStackGetter = mono_property_get_get_method(exceptionStackProp);
-			MonoString* exceptionStackTrace = (MonoString*) mono_runtime_invoke(exceptionStackGetter,
+			::MonoString* exceptionStackTrace = (::MonoString*) mono_runtime_invoke(exceptionStackGetter,
 																				exception,
 																				nullptr,
 																				nullptr);
