@@ -14,9 +14,11 @@ namespace ohno
 		const char* GetClassName() const;
 		const char* GetAccess() const;
 
-		friend std::ostream& operator<<(std::ostream& cout, const OhnoClassField& rhs);
+		MonoMemberAccess GetAccessEnum() const;
 
 	private:
+		friend std::ostream& operator<<(std::ostream& cout, const OhnoClassField& rhs);
+
 		::MonoClassField* mField{};
 		const char*       mFieldName{};
 

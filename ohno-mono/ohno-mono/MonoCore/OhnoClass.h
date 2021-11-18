@@ -2,6 +2,7 @@
 
 #include <string>
 #include <memory>
+#include <map>
 #include <unordered_map>
 
 #include "MonoCore/MonoPrereq.h"
@@ -13,10 +14,10 @@ namespace ohno
 	class OhnoClass
 	{
 	public:
-		OhnoClass(::MonoClass* rawClass);
+		OhnoClass(const MonoManager& mm, ::MonoClass* rawClass);
 		~OhnoClass();
 
-		::MonoObject* CreateInstance(::MonoObject* instance = nullptr, void* args[] = nullptr, size_t num = 0) const;
+		::MonoObject* CreateInstance(void* args[] = nullptr, size_t num = 0) const;
 
 		::MonoObject* InvokeMethod(const char* name,
 								   ::MonoObject* instance = nullptr,
@@ -33,14 +34,22 @@ namespace ohno
 		[[nodiscard]] ::MonoClass* GetRawClass() const;
 
 	private:
+		friend OhnoAssembly;
+		friend std::ostream& operator<<(std::ostream& cout, const OhnoClass& rhs);
+
 		void LoadAllMethods();
 		void LoadAllFields();
+		void LoadAllInheritedFields();
 
 	private:
-		::MonoClass* mClass{ nullptr };
-		const char*  mName{ nullptr };
+		::MonoClass* mClass { nullptr };
+		const char* mName { nullptr };
 
-		std::unordered_map<std::string, std::unique_ptr<OhnoMethod>>     mMethods{};
-		std::unordered_map<std::string, std::shared_ptr<OhnoClassField>> mFields{};
+		std::vector<std::unique_ptr<OhnoClassField>> mFields {};
+		std::map<std::string, std::vector<const OhnoClassField*>> mInheritedFields {};
+
+		std::vector<std::unique_ptr<OhnoMethod>> mMethods {};
+
+		const MonoManager& monoManagerRef;
 	};
 }

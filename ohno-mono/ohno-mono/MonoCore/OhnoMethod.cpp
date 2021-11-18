@@ -6,8 +6,8 @@
 namespace ohno
 {
 	OhnoMethod::OhnoMethod(::MonoMethod* rawMethod)
-		: mMethod{ rawMethod }
-		, mName{ mono_method_get_name(rawMethod) }
+		: mMethod { rawMethod }
+		, mName { mono_method_get_name(rawMethod) }
 	{
 
 		MonoMethodSignature* sig = mono_method_signature(mMethod);
@@ -29,8 +29,6 @@ namespace ohno
 		}
 
 		mSig = mono_signature_get_desc(sig, false);
-
-		std::cout << "|------" << *this << std::endl;
 	}
 
 	OhnoMethod::~OhnoMethod()
@@ -59,7 +57,7 @@ namespace ohno
 
 	std::ostream& operator<<(std::ostream& cout, const OhnoMethod& rhs)
 	{
-		cout << mono_class_get_name(rhs.mRetType) << " " << rhs.mName << "(" << rhs.mSig << ")";
+		cout << "|----------" << mono_class_get_name(rhs.mRetType) << " " << rhs.mName << "(" << rhs.mSig << ")";
 		return cout;
 	}
 }

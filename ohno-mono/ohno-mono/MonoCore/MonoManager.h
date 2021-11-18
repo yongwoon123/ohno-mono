@@ -31,9 +31,12 @@ namespace ohno
 		void LoadAssembly(const std::filesystem::path& assemblyPath);
 
 		::MonoObject* CreateInstance(const char* monoClassName, void** args = nullptr, size_t num = 0);
+
 		const OhnoClass* GetClass(const char* monoClassName);
 
 		[[nodiscard]] ::MonoDomain* ScriptDomain() const;
+
+		std::vector<const OhnoClass*> GetInheritedClass(const OhnoClass* myClass) const;
 
 	private: //Private Functions
 		void UnloadAllAssembly();

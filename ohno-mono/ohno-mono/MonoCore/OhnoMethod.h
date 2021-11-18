@@ -18,9 +18,10 @@ namespace ohno
 		const char* GetMethodName() const;
 		size_t      GetNumParam() const;
 
-		friend std::ostream& operator<<(std::ostream& cout, const OhnoMethod& rhs);
 
 	private:
+		friend std::ostream& operator<<(std::ostream& cout, const OhnoMethod& rhs);
+
 		::MonoMethod* mMethod{ nullptr };
 		const char* mName{ nullptr };
 

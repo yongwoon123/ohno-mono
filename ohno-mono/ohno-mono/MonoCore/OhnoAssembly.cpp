@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <cassert>
+#include <algorithm>
 
 #include "MonoCore/OhnoAssembly.h"
 
@@ -9,10 +10,10 @@ namespace ohno
 	struct FileStreams
 	{
 		std::ifstream file;
-		size_t        size{ 0 };
+		size_t        size { 0 };
 
 		FileStreams(const std::string& filePath)
-			: file{ filePath, std::ios::binary }
+			: file { filePath, std::ios::binary }
 		{
 			file.seekg(0, std::ios_base::end);
 			size = file.tellg();
@@ -25,9 +26,10 @@ namespace ohno
 		}
 	};
 
-	OhnoAssembly::OhnoAssembly(const std::string& filePath)
+	OhnoAssembly::OhnoAssembly(const MonoManager& mm, const std::string& filePath)
+		: monoManagerRef { mm }
 	{
-		FileStreams file{ filePath };
+		FileStreams file { filePath };
 
 		std::vector<char> buffer(file.size);
 		file.Read(buffer.data());
@@ -36,21 +38,21 @@ namespace ohno
 
 		// Load assembly from memory because mono_domain_assembly_open keeps a lock on the file
 		mImage = mono_image_open_from_data_with_name(buffer.data(),
-													 static_cast<uint32_t>(file.size),
-													 true /* copy data */,
-													 &status,
-													 false /* ref only */,
-													 filePath.c_str());
+			static_cast<uint32_t>(file.size),
+			true /* copy data */,
+			&status,
+			false /* ref only */,
+			filePath.c_str());
 
 		if (status != MONO_IMAGE_OK || mImage == nullptr)
 		{
-			std::cout << "Failed loading assembly " << filePath << std::endl;
+			std::cout << "Failed loading assembly " << filePath << "\n";
 		}
 
 		mAssembly = mono_assembly_load_from_full(mImage, filePath.c_str(), &status, false);
 		if (status != MONO_IMAGE_OK || mAssembly == nullptr)
 		{
-			std::cout << "Failed loading assembly" << filePath << std::endl;
+			std::cout << "Failed loading assembly" << filePath << "\n";
 		}
 
 		LoadAllClass();
@@ -63,6 +65,15 @@ namespace ohno
 		mAssembly = nullptr;
 	}
 
+	void OhnoAssembly::LoadDependencies()
+	{
+		std::ranges::for_each(mClasses, [] (const auto& ptr) -> void
+			{
+				ptr.second->LoadAllMethods();
+				ptr.second->LoadAllInheritedFields();
+			});
+	}
+
 	void OhnoAssembly::LoadAllClass()
 	{
 		const int numRows = mono_image_get_table_rows(mImage, MONO_TABLE_TYPEDEF);
@@ -70,18 +81,49 @@ namespace ohno
 		for (int i = 1; i < numRows; ++i)
 		{
 			std::unique_ptr<OhnoClass> classPtr
-				= std::make_unique<OhnoClass>(mono_class_get(mImage, (i + 1) | MONO_TOKEN_TYPE_DEF));
+				= std::make_unique<OhnoClass>(monoManagerRef, mono_class_get(mImage, (i + 1) | MONO_TOKEN_TYPE_DEF));
 
 			mClasses[classPtr->GetClassName()] = std::move(classPtr);
 		}
 	}
 
-	const OhnoClass* OhnoAssembly::GetClass(const char* monoClassName)
+	const OhnoClass* OhnoAssembly::GetClass(const std::string_view& ohnoClassName)
 	{
-		auto it = mClasses.find(monoClassName);
+		auto it = mClasses.find(ohnoClassName);
 
-		if (it == mClasses.end()) return nullptr;
+		return it == mClasses.end() ? nullptr : it->second.get();
+	}
 
-		return it->second.get();
+	std::vector<const OhnoClass*> OhnoAssembly::GetInheritedClass(const OhnoClass* myClass) const
+	{
+		std::vector<const OhnoClass*> inheritedClass {};
+
+		const char* className = myClass->GetClassName();
+
+		std::ranges::for_each(mClasses, [&myClass, &inheritedClass, &className] (const auto& klass) -> void
+			{
+				const OhnoClass* itClass = klass.second.get();
+
+				if (myClass->isSubClassOf(itClass->GetRawClass())
+					&& std::strcmp(className, itClass->GetClassName()) != 0)
+				{
+					inheritedClass.emplace_back(itClass);
+				}
+			});
+
+		return inheritedClass;
+	}
+
+	std::ostream& operator<<(std::ostream& cout, const OhnoAssembly& rhs)
+	{
+		cout << "|--Classes\n";
+
+		std::ranges::for_each(rhs.mClasses, [&cout] (const auto& klass)->void
+			{
+				cout << "|----" << klass.first << "\n";
+				cout << *(klass.second);
+			});
+
+		return cout;
 	}
 }

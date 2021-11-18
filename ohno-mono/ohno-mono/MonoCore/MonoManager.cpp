@@ -15,13 +15,13 @@ namespace ohno
 
 	const stdfs::path& GetFullCompilerPath()
 	{
-		static const stdfs::path fullCompilerPath{ stdfs::current_path().parent_path() / compiler };
+		static const stdfs::path fullCompilerPath { stdfs::current_path().parent_path() / compiler };
 		return fullCompilerPath;
 	}
 
 	const stdfs::path& GetDllOutputPath()
 	{
-		static const stdfs::path dllOutput{ stdfs::current_path() / outputDir };
+		static const stdfs::path dllOutput { stdfs::current_path() / outputDir };
 		return dllOutput;
 	}
 
@@ -37,7 +37,7 @@ namespace ohno
 
 	void MonoManager::Init()
 	{
-		std::cout << "Mono Init" << std::endl;
+		std::cout << "Mono Init\n";
 
 		mono_set_dirs(lib, etc);
 
@@ -52,9 +52,9 @@ namespace ohno
 
 	void MonoManager::CompileAssembly(const std::string& csprojPath)
 	{
-		std::cout << "Compiling " << csprojPath << std::endl;
+		std::cout << "Compiling " << csprojPath << "\n";
 
-		std::string command{ "\"\"" + GetFullCompilerPath().string() + "\" " };
+		std::string command { "\"\"" + GetFullCompilerPath().string() + "\" " };
 
 #ifdef _DEBUG
 		command += "/p:Configuration=Debug /p:Platform=x64 /p:OutputPath=\"" + GetDllOutputPath().string() + "\" ";
@@ -70,14 +70,12 @@ namespace ohno
 	{
 		if (mScriptDomain == nullptr)
 		{
-			const std::string outputDirStr{ (stdfs::current_path() / outputDir).string() };
+			const std::string outputDirStr { (stdfs::current_path() / outputDir).string() };
 			mScriptDomain = mono_domain_create_appdomain(const_cast<char*>(outputDirStr.c_str()), nullptr);
 			mono_domain_set(mScriptDomain, true);
-
-			//AssertSystem::Assert(mScriptDomain, "Cannot create script app domain.");
 		}
 
-		for (const auto& dir : stdfs::directory_iterator{ GetDllOutputPath() })
+		for (const auto& dir : stdfs::directory_iterator { GetDllOutputPath() })
 		{
 			const stdfs::path& path = dir.path();
 
@@ -86,14 +84,25 @@ namespace ohno
 				LoadAssembly(path);
 			}
 		}
+
+		std::ranges::for_each(mAssemblies, [] (const auto& assem)->void
+			{
+				assem.second->LoadDependencies();
+			});
+
+		std::cout << "All Loaded\n";
+
+		std::ranges::for_each(mAssemblies, [] (const auto& assem)->void
+			{
+				std::cout << assem.first << "\n";
+				std::cout << *(assem.second) << "\n";
+			});
 	}
 
 	void MonoManager::LoadAssembly(const std::filesystem::path& assemblyPath)
 	{
-		std::cout << assemblyPath.filename().string() << std::endl;
-
 		const std::string& fileName = assemblyPath.stem().string();
-		mAssemblies[fileName] = std::make_unique<OhnoAssembly>(assemblyPath.string());
+		mAssemblies[fileName] = std::make_unique<OhnoAssembly>(*this, assemblyPath.string());
 	}
 
 	void MonoManager::UnloadAllAssembly()
@@ -120,13 +129,7 @@ namespace ohno
 
 		if (classPtr)
 		{
-			auto* obj = mono_object_new(mScriptDomain, classPtr->GetRawClass());
-
-			return classPtr->CreateInstance(
-				obj,
-				args,
-				num
-			);
+			return classPtr->CreateInstance(args, num);
 		}
 
 		return nullptr;
@@ -147,6 +150,19 @@ namespace ohno
 		}
 
 		return ret;
+	}
+
+	std::vector<const OhnoClass*> MonoManager::GetInheritedClass(const OhnoClass* myClass) const
+	{
+		std::vector<const OhnoClass*> allInheriClass = {};
+
+		std::ranges::for_each(mAssemblies, [&allInheriClass, &myClass] (const auto& entry)->void
+			{
+				auto temp = entry.second->GetInheritedClass(myClass);
+				allInheriClass.insert(allInheriClass.end(), temp.begin(), temp.end());
+			});
+
+		return allInheriClass;
 	}
 
 	::MonoDomain* MonoManager::ScriptDomain() const

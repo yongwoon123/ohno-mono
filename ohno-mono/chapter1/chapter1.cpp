@@ -5,12 +5,12 @@
 
 struct Vector3
 {
-	float x{ 5 }, y{ 6 }, z{ 7 };
+	float x { 5 }, y { 6 }, z { 7 };
 };
 
 const std::string& GetCsProj()
 {
-	static const std::string csProj{ (std::filesystem::current_path().parent_path() / "sample-csharp" / "sample.csproj").string() };
+	static const std::string csProj { (std::filesystem::current_path().parent_path() / "sample-csharp" / "sample.csproj").string() };
 	return csProj;
 }
 
@@ -21,7 +21,7 @@ void CPPFunc()
 
 int main()
 {
-	ohno::MonoManager mm{};
+	ohno::MonoManager mm {};
 	mm.Init();
 
 	mm.CompileAssembly(GetCsProj());
@@ -30,19 +30,24 @@ int main()
 	//Get Class
 	const ohno::OhnoClass* classPtr = mm.GetClass("A");
 	::MonoObject* objPtr = nullptr;
+	::MonoObject* inhObjPtr = nullptr;
 
+	//Default Constructor
 	{
 		//Create instance of class default constructor
-		::MonoObject* objPtr = mm.CreateInstance("A");
+		objPtr = mm.CreateInstance("A");
+		std::cout << std::endl;
 	}
 
+	//Custom Constructor
 	{
 		//Create instance of conversion constructor
 		int val = 51234;
 		void* args[] = { &val };
 		objPtr = mm.CreateInstance("A", args, 1);
+		std::cout << std::endl;
 	}
-	
+
 	//Internal Call example
 	{
 		classPtr->AddInternalCall("Internal_CallCPPFunc", CPPFunc);
@@ -67,7 +72,21 @@ int main()
 
 		fieldPtr2->Set(objPtr, &inputF);
 		fieldPtr2->Get(objPtr, &outputF);
-		std::cout << "After Set: " << outputF << std::endl;
+		std::cout << "After Set: " << outputF << std::endl << std::endl;
+	}
+
+	//Inheritance Example
+	{
+		inhObjPtr = mm.CreateInstance("B");
+		const ohno::OhnoClassField* fieldPtr1 = classPtr->GetField("PrivateValueOf50");
+
+		int input = 5, output = 0;
+		fieldPtr1->Get(inhObjPtr, &output);
+		std::cout << "Initial: " << output << std::endl;
+
+		fieldPtr1->Set(inhObjPtr, &input);
+		fieldPtr1->Get(inhObjPtr, &output);
+		std::cout << "After Set: " << output << std::endl << std::endl;
 	}
 
 	//Method Example
@@ -76,11 +95,12 @@ int main()
 		const ohno::OhnoMethod* methodPtr2 = classPtr->GetMethod("SampleFunctionD", 1);
 		const ohno::OhnoMethod* methodPtr3 = classPtr->GetMethod("SampleFunctionE");
 
+		Vector3 val = {};
+		void* args[] = { &val };
+
 		classPtr->InvokeMethod("SampleFunctionC", objPtr);
 		methodPtr1->Invoke(objPtr);
 
-		Vector3 val = {};
-		void* args[] = { &val };
 		classPtr->InvokeMethod("SampleFunctionD", objPtr, args, 1);
 		methodPtr2->Invoke(objPtr, args);
 

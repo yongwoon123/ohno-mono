@@ -36,14 +36,16 @@ public class A
 	public int BaseValueIs20 = 20;
 	public float BaseValueIs10F = 10.0f;
 
+	private int PrivateValueOf50 = 50;
+
 	public A()
 	{
-		Out.Log("Default ctor");
+		Out.Log("A Default ctor");
 	}
 
 	public A(int b)
 	{
-		Out.Log("Conversion ctor IN:" + b);
+		Out.Log("A Conversion ctor IN:" + b);
 	}
 
 	public void SampleFunctionC()
@@ -64,4 +66,14 @@ public class A
 
 	[MethodImpl(MethodImplOptions.InternalCall)]
 	private static extern void Internal_CallCPPFunc();
+}
+
+public class B : A
+{
+	public int SomeTestValue;
+
+	public B() : base()
+    {
+		Out.Log("B Default ctor");
+    }
 }

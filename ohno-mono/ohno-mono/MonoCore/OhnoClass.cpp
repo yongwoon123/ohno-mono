@@ -6,13 +6,11 @@
 
 namespace ohno
 {
-	OhnoClass::OhnoClass(::MonoClass* rawClass)
-		: mClass{ rawClass }
-		, mName{ mono_class_get_name(mClass) }
+	OhnoClass::OhnoClass(const MonoManager& mm, ::MonoClass* rawClass)
+		: mClass { rawClass }
+		, mName { mono_class_get_name(mClass) }
+		, monoManagerRef { mm }
 	{
-		std::cout << "|--" << mName << std::endl;
-
-		LoadAllMethods();
 		LoadAllFields();
 	}
 
@@ -22,9 +20,9 @@ namespace ohno
 		mFields.clear();
 	}
 
-	::MonoObject* OhnoClass::CreateInstance(::MonoObject* instance, void* args[], size_t num) const
+	::MonoObject* OhnoClass::CreateInstance(void* args[], size_t num) const
 	{
-		assert(instance != nullptr);
+		::MonoObject* instance = mono_object_new(monoManagerRef.ScriptDomain(), mClass);
 
 		if (args == nullptr)
 		{
@@ -48,52 +46,58 @@ namespace ohno
 
 	::MonoObject* OhnoClass::InvokeMethod(const char* name, ::MonoObject* instance, void** params, size_t numParams) const
 	{
-		auto iter = mMethods.find(name);
+		const auto it = std::ranges::find_if(mMethods, [&name, &numParams] (const auto& method)->bool
+			{
+				return std::strcmp(name, method->GetMethodName()) == 0
+					&& method->GetNumParam() == numParams;
+			});
 
-		if (iter != mMethods.end() && iter->second->GetNumParam() == numParams)
-		{
-			return iter->second->Invoke(instance, params);
-		}
-
-		return nullptr;
+		return  it == mMethods.end() ? nullptr : (*it)->Invoke(instance, params);
 	}
 
 	void OhnoClass::AddInternalCall(const std::string& name, const void* method) const
 	{
-		const std::string fullMethodName = std::string{ mName } + "::" + name;
+		const std::string fullMethodName = std::string { mName } + "::" + name;
 		mono_add_internal_call(fullMethodName.c_str(), method);
 	}
 
 	void OhnoClass::LoadAllMethods()
 	{
-		std::cout << "|----" << "Methods" << std::endl;
-
 		void* methodIter = nullptr;
 		::MonoMethod* curClassMethod = mono_class_get_methods(mClass, &methodIter);
 
 		while (curClassMethod != nullptr)
 		{
-			std::unique_ptr<OhnoMethod> methodPtr = std::make_unique<OhnoMethod>(curClassMethod);
-			mMethods[methodPtr->GetMethodName()] = std::move(methodPtr);
-
+			mMethods.emplace_back(std::make_unique<OhnoMethod>(curClassMethod));
 			curClassMethod = mono_class_get_methods(mClass, &methodIter);
 		}
 	}
 
 	void OhnoClass::LoadAllFields()
 	{
-		std::cout << "|----" << "Fields" << std::endl;
-
 		void* fieldIter = nullptr;
 		::MonoClassField* curClassField = mono_class_get_fields(mClass, &fieldIter);
 
 		while (curClassField != nullptr)
 		{
-			std::shared_ptr<OhnoClassField> field = std::make_shared<OhnoClassField>(curClassField);
-			mFields[field->GetFieldName()] = std::move(field);
-
+			mFields.emplace_back(std::make_unique<OhnoClassField>(curClassField));
 			curClassField = mono_class_get_fields(mClass, &fieldIter);
 		}
+	}
+
+	void OhnoClass::LoadAllInheritedFields()
+	{
+		auto allInheritedClasses = monoManagerRef.GetInheritedClass(this);
+
+		std::ranges::for_each(allInheritedClasses, [this] (const auto& klass)->void
+			{
+				auto& vec = mInheritedFields[klass->GetClassName()];
+
+				std::ranges::for_each(klass->mFields, [&vec] (const auto& field)->void
+					{
+						vec.emplace_back(field.get());
+					});
+			});
 	}
 
 	const char* OhnoClass::GetClassName() const
@@ -108,21 +112,54 @@ namespace ohno
 
 	const OhnoClassField* OhnoClass::GetField(const char* fieldName) const
 	{
-		return mFields.find(fieldName)->second.get();
+		const auto it = std::ranges::find_if(mFields, [&fieldName] (const auto& field)->bool
+			{
+				return std::strcmp(fieldName, field->GetFieldName()) == 0;
+			});
+
+		return it == mFields.end() ? nullptr : (*it).get();
 	}
 
 	const OhnoMethod* OhnoClass::GetMethod(const char* methodName, size_t numParam) const
 	{
-		auto it = mMethods.find(methodName);
-
-		while (it != mMethods.end())
-		{
-			if (it->second->GetNumParam() == numParam)
+		const auto it = std::ranges::find_if(mMethods, [&methodName, &numParam] (const auto& method)->bool
 			{
-				return it->second.get();
-			}
-		}
+				return std::strcmp(methodName, method->GetMethodName()) == 0
+					&& method->GetNumParam() == numParam;
+			});
 
-		return nullptr;
+		return  it == mMethods.end() ? nullptr : (*it).get();;
+	}
+
+	std::ostream& operator<<(std::ostream& cout, const OhnoClass& rhs)
+	{
+		cout << "|------Fields\n";
+
+		std::ranges::for_each(rhs.mFields, [&cout] (const auto& field)->void
+			{
+				cout << "|--------" << field->GetFieldName() << "\n";
+				cout << *field << "\n";
+			});
+
+		cout << "|------Inherited Fields\n";
+
+		std::ranges::for_each(rhs.mInheritedFields, [&cout] (const auto& fieldVec)->void
+			{
+				std::ranges::for_each(fieldVec.second, [&fieldVec, &cout] (const auto& field)->void
+					{
+						cout << "|--------" << fieldVec.first << "::" << field->GetFieldName() << "\n";
+						cout << *field << "\n";
+					});
+			});
+
+		cout << "|------Methods\n";
+
+		std::ranges::for_each(rhs.mMethods, [&cout] (const auto& method)->void
+			{
+				cout << "|--------" << method->GetMethodName() << "\n";
+				cout << *method << "\n";
+			});
+
+		return cout;
 	}
 }

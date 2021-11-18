@@ -19,4 +19,14 @@ namespace ohno
 	class OhnoClass;
 	class OhnoMethod;
 	class OhnoClassField;
+
+	enum class MonoMemberAccess
+	{
+		Private,
+		Internal,
+		Protected,
+		ProtectedInternal,
+		Public
+	};
+
 }
