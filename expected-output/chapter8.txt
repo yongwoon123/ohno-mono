@@ -1,0 +1,24 @@
+=== Chapter 8: Receiving Arrays ===
+
+--- Receive int array from return value ---
+C#: Returning int[] { 10, 20, 30, 40, 50 }
+C++: Received int[5]: 10, 20, 30, 40, 50
+
+--- Receive string array from return value ---
+C#: Returning string[] { "alpha", "beta", "gamma" }
+C++: Received string[3]: "alpha", "beta", "gamma"
+
+--- Receive Vector3 array from return value ---
+C#: Returning Vector3[] { Vec3(0.00, 1.00, 2.00), Vec3(10.00, 20.00, 30.00) }
+C++: Received Vector3[2]:
+C++:   [0] x=0 y=1 z=2
+C++:   [1] x=10 y=20 z=30
+
+--- Receive int array from class field ---
+C#: Numbers: {1, 2, 3}
+C++: Field 'Numbers' is an array, length = 3
+C++: Values: 1, 2, 3
+
+--- Type dispatch on received array ---
+C#: Returning int[] { 10, 20, 30, 40, 50 }
+C++: Detected int[] - reading 5 element(s): 10, 20, 30, 40, 50

@@ -1,0 +1,24 @@
+=== Chapter 7: Sending Arrays ===
+
+--- Int array ---
+C++: Sending int[] { 10, 20, 30, 40, 50 }
+C#: Received array, length = 5
+C#: [0] = 10
+C#: [1] = 20
+C#: [2] = 30
+C#: [3] = 40
+C#: [4] = 50
+
+--- String array ---
+C++: Sending string[] { "alpha", "beta", "gamma" }
+C#: Received array, length = 3
+C#: [0] = alpha
+C#: [1] = beta
+C#: [2] = gamma
+
+--- Vector3 array ---
+C++: Sending Vector3[] { (1,0,0), (0,1,0), (0,0,1) }
+C#: Received array, length = 3
+C#: [0] = Vec3(1.00, 0.00, 0.00)
+C#: [1] = Vec3(0.00, 1.00, 0.00)
+C#: [2] = Vec3(0.00, 0.00, 1.00)

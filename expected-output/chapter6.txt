@@ -1,0 +1,15 @@
+=== Chapter 6: String Marshalling ===
+
+--- C++ to C#: internal call returns string ---
+C++: Registering GetName(), will return "ohno-entity"
+C#: Received name = "ohno-entity"
+
+--- C# to C++: internal call receives string ---
+C#: Passing "hello from C#" to C++
+C++: Received string = "hello from C#"
+
+--- Round-trip ---
+C++: Original name = "entity_001"
+C#: Appending suffix...
+C#: Passing back "entity_001_modified"
+C++: Received modified name = "entity_001_modified"

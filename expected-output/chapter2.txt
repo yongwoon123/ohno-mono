@@ -1,0 +1,29 @@
+Chapter 2 is interactive - the user edits the C# source mid-run and presses Enter to trigger reload.
+
+Phase 1 (before reload):
+
+=== Chapter 2: Hot Reload ===
+
+[Load] Assembly loaded
+
+--- Before Reload ---
+C#: Hello from ScriptA - version 1
+
+Modify sample-csharp and press Enter to reload...
+
+--- edit SampleClass.cs, change "version 1" to "version 2", save, then press Enter ---
+
+Phase 2 (after reload):
+
+[Reload] Unloading script domain...
+[Reload] Recompiling C#...
+[Reload] Loading assembly...
+[Reload] Re-registering internal calls...
+[Reload] Complete
+
+--- After Reload ---
+C#: Hello from ScriptA - version 2
+
+--- Internal Call still works after reload ---
+C#: Calling back into C++...
+C++: InternalCall reached from C#

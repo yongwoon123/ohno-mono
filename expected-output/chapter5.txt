@@ -1,0 +1,20 @@
+=== Chapter 5: C# Properties Backed by Internal Calls ===
+
+--- Registration ---
+C++: Internal calls registered for MyTransform
+
+--- Read position (initial) ---
+C#: transform.position = Vec3(0.00, 0.00, 0.00)
+
+--- Write position ---
+C#: Setting position to Vec3(1.00, 2.00, 3.00)
+C++: Transform data confirmed: x=1.00, y=2.00, z=3.00
+
+--- Read position (after set) ---
+C#: transform.position = Vec3(1.00, 2.00, 3.00)
+
+--- isActive property ---
+C#: isActive = true
+C#: Setting isActive to false
+C++: isActive confirmed: false
+C#: isActive = false

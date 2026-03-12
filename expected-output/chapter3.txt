@@ -1,0 +1,21 @@
+=== Chapter 3: GC Handles ===
+
+--- Without GC Handle (danger demo) ---
+C++: Created instance, raw pointer stored
+C++: Forcing GC collect...
+C++: Attempting to use raw pointer after GC collect — result is undefined
+
+--- With GC Handle (safe) ---
+C++: Created instance, handle acquired
+C++: Forcing GC collect (x3)...
+C++: Resolving handle after GC collect...
+C++: Object still alive, invoking method:
+C#: Method called successfully on GC-pinned object
+
+--- Freeing Handle ---
+C++: Handle freed, object is now collectable
+C++: Forcing GC collect...
+C++: Done — object released safely
+
+Note: the "danger demo" may not visibly crash since GC collection is non-deterministic.
+The point is to show why raw pointers are unsafe - the code commentary explains the risk.

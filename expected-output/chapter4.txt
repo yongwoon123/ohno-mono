@@ -1,0 +1,29 @@
+=== Chapter 4: Script Component Pattern ===
+
+--- Discovery ---
+C++: Scanning for SimpleBehaviour subclasses...
+C++: Found 3 script(s):
+C++:   - PlayerController
+C++:   - EnemyAI
+C++:   - CameraFollow
+
+--- Awake ---
+C#: [PlayerController] Awake
+C#: [EnemyAI] Awake
+C#: [CameraFollow] Awake
+
+--- Start ---
+C#: [PlayerController] Start
+C#: [EnemyAI] Start
+C#: [CameraFollow] Start
+
+--- Update Loop (3 ticks) ---
+C#: [PlayerController] Update - tick 1
+C#: [EnemyAI] Update - tick 1
+C#: [CameraFollow] Update - tick 1
+C#: [PlayerController] Update - tick 2
+C#: [EnemyAI] Update - tick 2
+C#: [CameraFollow] Update - tick 2
+C#: [PlayerController] Update - tick 3
+C#: [EnemyAI] Update - tick 3
+C#: [CameraFollow] Update - tick 3

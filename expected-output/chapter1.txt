@@ -1,0 +1,27 @@
+=== Chapter 1: The Basics ===
+
+[Init] Mono runtime initialized
+
+[Load] Assembly loaded: Assembly-CSharp
+
+--- Default Constructor ---
+C#: Entity default constructor called
+
+--- Parameterized Constructor ---
+C#: Entity constructor called with id: 42
+
+--- Field Get ---
+C++: field 'Health' initial value = 100
+
+--- Field Set ---
+C++: field 'Health' after set = 50
+
+--- Method (no params) ---
+C#: SampleVoidMethod called
+
+--- Method (struct param) ---
+C#: Move called with Vec3(1.00, 2.00, 3.00)
+
+--- Internal Call ---
+C#: Calling back into C++...
+C++: InternalCall reached from C#
