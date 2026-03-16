@@ -1,4 +1,4 @@
-# ohno-mono
+# Embedding Mono in C++: A Step-by-Step Scripting Tutorial
 
 A step-by-step tutorial for embedding [Mono](https://www.mono-project.com/) into a custom C++ engine so that C# can be used as a scripting language.
 
